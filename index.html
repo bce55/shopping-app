@@ -4,103 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#667eea">
-    <meta name="description" content="אפליקציה לבנייה חכמה של רשימת קניות לתכנית חיתוב משותפת">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23667eea' width='192' height='192'/><text x='96' y='120' font-size='120' font-weight='bold' fill='white' text-anchor='middle'>🛒</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23667eea' width='180' height='180'/><text x='90' y='135' font-size='110' font-weight='bold' fill='white' text-anchor='middle'>🛒</text></svg>">
     <title>🛒 בונה קניות חכם</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 10px;
-            padding-top: max(10px, env(safe-area-inset-top));
-            padding-bottom: max(10px, env(safe-area-inset-bottom));
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
         }
-
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 20px;
             text-align: center;
-            padding-top: max(20px, env(safe-area-inset-top));
+            position: relative;
         }
-
-        .header h1 {
-            font-size: 1.8em;
-            margin-bottom: 5px;
+        .install-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255,255,255,0.3);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: none;
         }
-
-        .header p {
-            font-size: 0.95em;
-            opacity: 0.9;
+        .install-btn.show { display: block; }
+        .tabs {
+            display: flex;
+            background: #f0f0f0;
+            border-bottom: 2px solid #ddd;
         }
-
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+        }
+        .tab-btn.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
         .content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
             padding: 20px;
             flex: 1;
             overflow-y: auto;
         }
-
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .section {
             background: #f8f9fa;
             padding: 20px;
             border-radius: 10px;
             border-left: 5px solid #667eea;
         }
-
-        .section h2 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            display: block;
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 6px;
-            font-size: 0.95em;
-        }
-
-        .input-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .input-wrapper input {
+        .section h2 { color: #333; margin-bottom: 15px; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-weight: 600; color: #555; margin-bottom: 6px; }
+        input[type="number"] {
             width: 70px;
             padding: 8px;
             border: 2px solid #ddd;
@@ -108,12 +89,6 @@
             font-size: 1em;
             text-align: center;
         }
-
-        .input-wrapper input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
         .meal-counter {
             background: white;
             padding: 8px;
@@ -123,7 +98,6 @@
             font-weight: 600;
             font-size: 0.85em;
         }
-
         button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -132,58 +106,22 @@
             font-size: 1em;
             border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.2s;
             font-weight: 600;
             width: 100%;
             margin-top: 15px;
         }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .reset-button {
-            background: #dc3545;
-            margin-top: 8px;
-            padding: 8px 15px;
-            font-size: 0.9em;
-        }
-
-        .shopping-list {
-            grid-column: 1 / -1;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 15px;
-            border-top: 5px solid #70ad47;
-        }
-
-        .shopping-list h2 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-
-        .category-section {
-            margin-bottom: 20px;
-        }
-
+        .reset-btn { background: #dc3545; margin-top: 8px; }
+        .shopping-list { background: white; padding: 20px; border-radius: 10px; border-top: 5px solid #70ad47; }
+        .category-section { margin-bottom: 20px; }
         .category-title {
             background: #70ad47;
             color: white;
             padding: 8px 12px;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 1em;
             margin-bottom: 8px;
         }
-
-        .item-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 10px;
-        }
-
+        .item-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
         .item {
             background: #f8f9fa;
             padding: 12px;
@@ -192,14 +130,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.9em;
         }
-
-        .item-name {
-            font-weight: 600;
-            color: #333;
-        }
-
+        .item-name { font-weight: 600; color: #333; flex: 1; }
+        .item-qty { display: flex; gap: 8px; align-items: center; }
         .item-quantity {
             background: #70ad47;
             color: white;
@@ -209,387 +142,367 @@
             white-space: nowrap;
             font-size: 0.85em;
         }
-
-        .notes {
-            background: #fff3cd;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 15px;
-            border-right: 4px solid #ffc107;
-        }
-
-        .notes h3 {
-            color: #856404;
-            margin-bottom: 8px;
-            font-size: 0.95em;
-        }
-
-        .notes ul {
-            list-style: none;
-            padding-right: 15px;
-        }
-
-        .notes li {
-            color: #856404;
-            margin-bottom: 4px;
-            font-size: 0.85em;
-            position: relative;
-        }
-
-        .notes li:before {
-            content: "✓";
-            position: absolute;
-            right: 100%;
-            margin-right: 8px;
-            font-weight: bold;
-        }
-
-        .offline-indicator {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: #ff6b6b;
-            color: white;
-            padding: 8px;
-            text-align: center;
+        .item-controls { display: flex; gap: 5px; }
+        .edit-btn, .delete-btn {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
             font-weight: 600;
-            z-index: 1000;
+            color: white;
+        }
+        .edit-btn { background: #007bff; }
+        .delete-btn { background: #dc3545; }
+        .modal {
             display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
-
-        .offline-indicator.show {
-            display: block;
+        .modal.show { display: flex; }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
         }
-
+        .modal-content h3 { margin-bottom: 15px; color: #333; }
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+        }
+        .modal-buttons { display: flex; gap: 10px; }
+        .modal-buttons button { flex: 1; margin: 0; }
         @media (max-width: 768px) {
-            .content {
-                grid-template-columns: 1fr;
-            }
-
-            .header h1 {
-                font-size: 1.4em;
-            }
-
-            .item-list {
-                grid-template-columns: 1fr;
-            }
-
-            .shopping-list {
-                grid-column: 1;
-            }
-
-            .section {
-                padding: 15px;
-            }
+            .grid { grid-template-columns: 1fr; }
+            .item-list { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="offline-indicator" id="offlineIndicator">
-        📡 אתם בעבודה offline - הנתונים שלכם שמורים בטלפון
-    </div>
-
     <div class="container">
         <div class="header">
+            <button class="install-btn" id="installBtn" onclick="installApp()">📲 הוסף לטלפון</button>
             <h1>🛒 בונה קניות חכם</h1>
-            <p>איתם ועדי - תכנית חיתוב משותפת</p>
+            <p>איתם ועדי</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(0)">📋 בנייה</button>
+            <button class="tab-btn" onclick="switchTab(1)">📊 טבלאות</button>
+            <button class="tab-btn" onclick="switchTab(2)">🛍️ קניות</button>
         </div>
 
         <div class="content">
-            <!-- MEAL SELECTION -->
-            <div class="section">
-                <h2>🥩 בחרו ארוחות בשבוע</h2>
-                
-                <div class="input-group">
-                    <label>דג לבן</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="dagLaban" min="0" max="7" value="0">
+            <!-- TAB 1 -->
+            <div class="tab-content active">
+                <div class="grid">
+                    <div class="section">
+                        <h2>🥩 בחרו ארוחות</h2>
+                        <div class="input-group">
+                            <label>דג לבן</label>
+                            <input type="number" id="dagLaban" min="0" max="7" value="0">
+                            <div class="meal-counter" id="dagCounter"></div>
+                        </div>
+                        <div class="input-group">
+                            <label>סלמון</label>
+                            <input type="number" id="salmon" min="0" max="7" value="0">
+                            <div class="meal-counter" id="salmonCounter"></div>
+                        </div>
+                        <div class="input-group">
+                            <label>בקר</label>
+                            <input type="number" id="beef" min="0" max="7" value="0">
+                            <div class="meal-counter" id="beefCounter"></div>
+                        </div>
+                        <div class="input-group">
+                            <label>עוף</label>
+                            <input type="number" id="chicken" min="0" max="7" value="0">
+                            <div class="meal-counter" id="chickenCounter"></div>
+                        </div>
+                        <div class="input-group">
+                            <label>טופו</label>
+                            <input type="number" id="tofu" min="0" max="7" value="0">
+                            <div class="meal-counter" id="tofuCounter"></div>
+                        </div>
+                        <button onclick="calculateShoppingList()">📋 חשב</button>
+                        <button class="reset-btn" onclick="resetSelection()">🔄 איפוס</button>
                     </div>
-                    <div class="meal-counter" id="dagCounter"></div>
-                </div>
-
-                <div class="input-group">
-                    <label>סלמון</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="salmon" min="0" max="7" value="0">
+                    <div class="section">
+                        <h2>📊 סיכום</h2>
+                        <div class="meal-counter" style="font-size: 1.3em;" id="totalMeals">0 ארוחות</div>
                     </div>
-                    <div class="meal-counter" id="salmonCounter"></div>
-                </div>
-
-                <div class="input-group">
-                    <label>בקר</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="beef" min="0" max="7" value="0">
-                    </div>
-                    <div class="meal-counter" id="beefCounter"></div>
-                </div>
-
-                <div class="input-group">
-                    <label>עוף</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="chicken" min="0" max="7" value="0">
-                    </div>
-                    <div class="meal-counter" id="chickenCounter"></div>
-                </div>
-
-                <div class="input-group">
-                    <label>טופו</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="tofu" min="0" max="7" value="0">
-                    </div>
-                    <div class="meal-counter" id="tofuCounter"></div>
-                </div>
-
-                <button onclick="calculateShoppingList()">📋 חשב קניות</button>
-                <button class="reset-button" onclick="resetSelection()">🔄 איפוס</button>
-            </div>
-
-            <!-- SUMMARY -->
-            <div class="section">
-                <h2>📊 סיכום</h2>
-                
-                <div class="input-group">
-                    <label>סה"כ ארוחות:</label>
-                    <div class="meal-counter" style="font-size: 1.3em;" id="totalMeals">0</div>
-                </div>
-
-                <div class="notes">
-                    <h3>ℹ️ מידע חשוב:</h3>
-                    <ul>
-                        <li><strong>איתם:</strong> 3 אימוני כוח</li>
-                        <li><strong>עדי:</strong> 2 אימוני כוח</li>
-                        <li>חישוב כללי לשניכם</li>
-                        <li>בבית תפצלו לפי משקלכם</li>
-                        <li>הנתונים שמורים בטלפון</li>
-                    </ul>
                 </div>
             </div>
 
-            <!-- SHOPPING LIST -->
-            <div class="shopping-list" id="shoppingListContainer" style="display: none;">
-                <h2>🛍️ רשימת הקניות</h2>
-                <div id="shoppingListContent"></div>
+            <!-- TAB 2 -->
+            <div class="tab-content">
+                <div class="section">
+                    <h2>איתם</h2>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                        <tr style="background: #667eea; color: white;">
+                            <th style="padding: 10px; text-align: right;">מרכיב</th>
+                            <th style="padding: 10px; text-align: right;">כמות</th>
+                            <th style="padding: 10px; text-align: right;">יחידה</th>
+                        </tr>
+                        <tbody id="itamTable"></tbody>
+                    </table>
+                </div>
+                <div class="section" style="margin-top: 20px;">
+                    <h2>עדי</h2>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                        <tr style="background: #667eea; color: white;">
+                            <th style="padding: 10px; text-align: right;">מרכיב</th>
+                            <th style="padding: 10px; text-align: right;">כמות</th>
+                            <th style="padding: 10px; text-align: right;">יחידה</th>
+                        </tr>
+                        <tbody id="ediTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 3 -->
+            <div class="tab-content">
+                <div id="noList" style="text-align: center; padding: 40px; color: #999;">
+                    <p>📋 חשבו את הקניות</p>
+                </div>
+                <div class="shopping-list" id="shoppingListContainer" style="display: none;">
+                    <h2>🛍️ קניות</h2>
+                    <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">✏️ = ערוך | 🗑️ = מחק</p>
+                    <div id="shoppingListContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT MODAL -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h3>ערוך</h3>
+            <input type="text" id="editItemName" readonly style="background: #f0f0f0;">
+            <input type="number" id="editItemQty">
+            <input type="text" id="editItemUnit">
+            <div class="modal-buttons">
+                <button onclick="saveEdit()" style="background: #28a745;">💾 שמור</button>
+                <button onclick="closeEdit()" style="background: #dc3545;">ביטול</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Register service worker
+        let deferredPrompt;
+        let shoppingList = null;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBtn').classList.add('show');
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(r => {
+                    if (r.outcome === 'accepted') {
+                        document.getElementById('installBtn').classList.remove('show');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js').then(reg => {
-                console.log('Service Worker registered');
-            }).catch(err => {
-                console.log('Service Worker registration failed:', err);
-            });
+            navigator.serviceWorker.register('service-worker.js');
         }
 
-        // Check online status
-        window.addEventListener('online', () => {
-            document.getElementById('offlineIndicator').classList.remove('show');
-        });
-
-        window.addEventListener('offline', () => {
-            document.getElementById('offlineIndicator').classList.add('show');
-        });
-
-        if (!navigator.onLine) {
-            document.getElementById('offlineIndicator').classList.add('show');
-        }
-
-        // Load and save logic
-        window.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('DOMContentLoaded', () => {
             loadSelections();
+            populateTables();
             updateCounters();
             updateTotal();
-        });
-
-        document.querySelectorAll('input[type="number"]').forEach(input => {
-            input.addEventListener('change', function() {
-                saveSelections();
-                updateCounters();
-                updateTotal();
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('change', () => {
+                    saveSelections();
+                    updateCounters();
+                    updateTotal();
+                });
             });
         });
 
+        function switchTab(i) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-content')[i].classList.add('active');
+            document.querySelectorAll('.tab-btn')[i].classList.add('active');
+        }
+
         function saveSelections() {
-            const selections = {
+            localStorage.setItem('meals', JSON.stringify({
                 dagLaban: document.getElementById('dagLaban').value,
                 salmon: document.getElementById('salmon').value,
                 beef: document.getElementById('beef').value,
                 chicken: document.getElementById('chicken').value,
                 tofu: document.getElementById('tofu').value
-            };
-            localStorage.setItem('mealSelections', JSON.stringify(selections));
+            }));
         }
 
         function loadSelections() {
-            const saved = localStorage.getItem('mealSelections');
-            if (saved) {
-                const selections = JSON.parse(saved);
-                document.getElementById('dagLaban').value = selections.dagLaban || 0;
-                document.getElementById('salmon').value = selections.salmon || 0;
-                document.getElementById('beef').value = selections.beef || 0;
-                document.getElementById('chicken').value = selections.chicken || 0;
-                document.getElementById('tofu').value = selections.tofu || 0;
+            const s = localStorage.getItem('meals');
+            if (s) {
+                const d = JSON.parse(s);
+                ['dagLaban', 'salmon', 'beef', 'chicken', 'tofu'].forEach(id => {
+                    document.getElementById(id).value = d[id] || 0;
+                });
             }
         }
 
         function resetSelection() {
-            document.getElementById('dagLaban').value = 0;
-            document.getElementById('salmon').value = 0;
-            document.getElementById('beef').value = 0;
-            document.getElementById('chicken').value = 0;
-            document.getElementById('tofu').value = 0;
-            localStorage.removeItem('mealSelections');
-            document.getElementById('shoppingListContainer').style.display = 'none';
+            ['dagLaban', 'salmon', 'beef', 'chicken', 'tofu'].forEach(id => {
+                document.getElementById(id).value = 0;
+            });
+            localStorage.removeItem('meals');
             updateCounters();
             updateTotal();
         }
 
         function updateCounters() {
-            const weights = {
-                dagLaban: { itam: 250, edi: 160 },
-                salmon: { itam: 220, edi: 120 },
-                beef: { itam: 250, edi: 160 },
-                chicken: { itam: 250, edi: 160 },
-                tofu: { itam: 250, edi: 160 }
+            const w = {
+                dagLaban: {itam: 250, edi: 160},
+                salmon: {itam: 220, edi: 120},
+                beef: {itam: 250, edi: 160},
+                chicken: {itam: 250, edi: 160},
+                tofu: {itam: 250, edi: 160}
             };
-
-            Object.entries(weights).forEach(([id, w]) => {
-                const meals = parseInt(document.getElementById(id).value) || 0;
-                const itamTotal = meals * w.itam;
-                const ediTotal = meals * w.edi;
-                const total = itamTotal + ediTotal;
-                document.getElementById(id + 'Counter').textContent = 
-                    `אתם: ${itamTotal}ג | עדי: ${ediTotal}ג | סה"כ: ${total}ג`;
+            Object.entries(w).forEach(([id, wt]) => {
+                const m = parseInt(document.getElementById(id).value) || 0;
+                const it = m * wt.itam;
+                const ed = m * wt.edi;
+                document.getElementById(id + 'Counter').textContent = `אתם: ${it}ג | עדי: ${ed}ג | סה"כ: ${it+ed}ג`;
             });
         }
 
         function updateTotal() {
-            const meals = ['dagLaban', 'salmon', 'beef', 'chicken', 'tofu']
-                .reduce((sum, id) => sum + (parseInt(document.getElementById(id).value) || 0), 0);
-            document.getElementById('totalMeals').textContent = meals + ' ארוחות';
+            const m = ['dagLaban', 'salmon', 'beef', 'chicken', 'tofu'].reduce((s, id) => s + (parseInt(document.getElementById(id).value) || 0), 0);
+            document.getElementById('totalMeals').textContent = m + ' ארוחות';
+        }
+
+        function populateTables() {
+            const it = [
+                {n: 'דג לבן', q: 1750, u: 'גרם'},
+                {n: 'סלמון', q: 1540, u: 'גרם'},
+                {n: 'בקר', q: 1750, u: 'גרם'},
+                {n: 'עוף', q: 1750, u: 'גרם'},
+                {n: 'אורז', q: 1500, u: 'גרם'},
+                {n: 'בטטה', q: 2000, u: 'גרם'},
+            ];
+            const ed = [
+                {n: 'דג לבן', q: 1120, u: 'גרם'},
+                {n: 'סלמון', q: 840, u: 'גרם'},
+                {n: 'בקר', q: 1120, u: 'גרם'},
+                {n: 'עוף', q: 1120, u: 'גרם'},
+                {n: 'אורז', q: 840, u: 'גרם'},
+                {n: 'בטטה', q: 1120, u: 'גרם'},
+            ];
+            document.getElementById('itamTable').innerHTML = it.map(i => `<tr style="border: 1px solid #ddd;"><td style="padding: 10px; text-align: right;">${i.n}</td><td style="padding: 10px; text-align: right;">${i.q}</td><td style="padding: 10px; text-align: right;">${i.u}</td></tr>`).join('');
+            document.getElementById('ediTable').innerHTML = ed.map(i => `<tr style="border: 1px solid #ddd;"><td style="padding: 10px; text-align: right;">${i.n}</td><td style="padding: 10px; text-align: right;">${i.q}</td><td style="padding: 10px; text-align: right;">${i.u}</td></tr>`).join('');
         }
 
         function calculateShoppingList() {
-            const selections = {
+            const s = {
                 dagLaban: parseInt(document.getElementById('dagLaban').value) || 0,
                 salmon: parseInt(document.getElementById('salmon').value) || 0,
                 beef: parseInt(document.getElementById('beef').value) || 0,
                 chicken: parseInt(document.getElementById('chicken').value) || 0,
                 tofu: parseInt(document.getElementById('tofu').value) || 0
             };
-
-            const meatItems = [];
-            const meatData = {
-                dagLaban: { itam: 250, edi: 160, name: 'דג לבן' },
-                salmon: { itam: 220, edi: 120, name: 'סלמון' },
-                beef: { itam: 250, edi: 160, name: 'בקר' },
-                chicken: { itam: 250, edi: 160, name: 'עוף' },
-                tofu: { itam: 250, edi: 160, name: 'טופו' }
+            const m = [];
+            const md = {
+                dagLaban: {itam: 250, edi: 160, name: 'דג לבן'},
+                salmon: {itam: 220, edi: 120, name: 'סלמון'},
+                beef: {itam: 250, edi: 160, name: 'בקר'},
+                chicken: {itam: 250, edi: 160, name: 'עוף'},
+                tofu: {itam: 250, edi: 160, name: 'טופו'}
             };
-
-            Object.entries(selections).forEach(([key, count]) => {
-                if (count > 0) {
-                    const data = meatData[key];
-                    meatItems.push({
-                        name: data.name,
-                        quantity: count * (data.itam + data.edi),
-                        unit: 'גרם',
-                        category: 'בשרים'
-                    });
+            Object.entries(s).forEach(([k, c]) => {
+                if (c > 0) {
+                    const d = md[k];
+                    m.push({name: d.name, quantity: c * (d.itam + d.edi), unit: 'גרם', category: 'בשרים'});
                 }
             });
-
-            const fixedItems = [
-                { name: 'בננה', qty: 14, unit: 'יח\'', cat: 'ארוחת בוקר' },
-                { name: 'תפוח', qty: 14, unit: 'יח\'', cat: 'ארוחת בוקר' },
-                { name: 'אבטיח', qty: 2800, unit: 'גרם', cat: 'ארוחת בוקר' },
-                { name: 'אגס', qty: 1050, unit: 'גרם', cat: 'ארוחת בוקר' },
-                { name: 'אפרסק', qty: 1050, unit: 'גרם', cat: 'ארוחת בוקר' },
-                { name: 'שקדים', qty: 35, unit: 'יח\'', cat: 'ארוחת בוקר' },
-                { name: 'מעדן חלבון', qty: 14, unit: 'יח\'', cat: 'ארוחת בוקר' },
-                
-                { name: 'אורז', qty: 2340, unit: 'גרם', cat: 'פחמימות' },
-                { name: 'בטטה', qty: 3120, unit: 'גרם', cat: 'פחמימות' },
-                { name: 'קינואה', qty: 2340, unit: 'גרם', cat: 'פחמימות' },
-                { name: 'אפונה', qty: 3120, unit: 'גרם', cat: 'פחמימות' },
-                { name: 'פסטה', qty: 2340, unit: 'גרם', cat: 'פחמימות' },
-                { name: 'עדשים', qty: 3120, unit: 'גרם', cat: 'פחמימות' },
-                
-                { name: 'עגבניה', qty: 7000, unit: 'גרם', cat: 'ירקות' },
-                { name: 'מלפפון', qty: 4200, unit: 'גרם', cat: 'ירקות' },
-                { name: 'גזר', qty: 3500, unit: 'גרם', cat: 'ירקות' },
-                { name: 'ברוקולי', qty: 4200, unit: 'גרם', cat: 'ירקות' },
-                { name: 'כרוב', qty: 2800, unit: 'גרם', cat: 'ירקות' },
-                { name: 'תרד', qty: 2450, unit: 'גרם', cat: 'ירקות' },
-                
-                { name: 'לחם קל', qty: 126, unit: 'פרוסות', cat: 'לחם' },
-                { name: 'לחם מלא', qty: 84, unit: 'פרוסות', cat: 'לחם' },
-                { name: 'פריכיות אורז', qty: 140, unit: 'יח\'', cat: 'לחם' },
-                { name: 'דפי אורז', qty: 140, unit: 'דף', cat: 'לחם' },
-                { name: 'פיתה קלה', qty: 21, unit: 'יח\'', cat: 'לחם' },
-                { name: 'חטיף פריכיות', qty: 14, unit: 'שקית', cat: 'לחם' },
-                
-                { name: 'ביצים', qty: 91, unit: 'יח\'', cat: 'חלבוןות' },
-                { name: 'טונה בשימור', qty: 24.5, unit: 'קופסה', cat: 'בשרים' },
-                { name: 'גבינה צהובה 9%', qty: 49, unit: 'פרוסה', cat: 'חלבוןות' },
-                { name: 'קוטג\' 3%', qty: 2100, unit: 'גרם', cat: 'חלבוןות' },
-                { name: 'גבינה לבנה 3%', qty: 2100, unit: 'גרם', cat: 'חלבוןות' },
-                { name: 'לאבנה 5%', qty: 1750, unit: 'גרם', cat: 'חלבוןות' },
-                { name: 'בולגרית 5%', qty: 1750, unit: 'גרם', cat: 'חלבוןות' },
-                { name: 'פטה 5%', qty: 1750, unit: 'גרם', cat: 'חלבוןות' },
-                
-                { name: 'טחינה גולמית', qty: 70, unit: 'גרם', cat: 'שומנים' },
-                { name: 'שמן זית', qty: 70, unit: 'גרם', cat: 'שומנים' },
-                
-                { name: 'שמן (תרסיס)', qty: 70, unit: 'פעמים', cat: 'אחר' },
-                { name: 'מים', qty: 38.5, unit: 'ליטר', cat: 'משקאות' }
+            const f = [
+                {name: 'בננה', q: 14, u: 'יח\'', c: 'ארוחה'},
+                {name: 'תפוח', q: 14, u: 'יח\'', c: 'ארוחה'},
+                {name: 'אבטיח', q: 2800, u: 'גרם', c: 'ארוחה'},
+                {name: 'אורז', q: 2340, u: 'גרם', c: 'פחמימות'},
+                {name: 'בטטה', q: 3120, u: 'גרם', c: 'פחמימות'},
+                {name: 'עגבניה', q: 7000, u: 'גרם', c: 'ירקות'},
+                {name: 'מלפפון', q: 4200, u: 'גרם', c: 'ירקות'},
             ];
-
-            const allItems = [...fixedItems, ...meatItems];
-            const categories = {};
-            allItems.forEach(item => {
-                if (!categories[item.cat]) categories[item.cat] = [];
-                categories[item.cat].push({
-                    name: item.name,
-                    quantity: item.qty,
-                    unit: item.unit,
-                    category: item.cat
-                });
+            f.forEach(i => m.push({name: i.name, quantity: i.q, unit: i.u, category: i.c}));
+            const ca = {};
+            m.forEach(i => {
+                if (!ca[i.category]) ca[i.category] = [];
+                ca[i.category].push(i);
             });
-
-            displayShoppingList(categories);
+            shoppingList = ca;
+            displayShoppingList(ca);
+            switchTab(2);
         }
 
-        function displayShoppingList(categories) {
-            const container = document.getElementById('shoppingListContent');
-            let html = '';
-
-            const categoryOrder = ['ארוחת בוקר', 'בשרים', 'פחמימות', 'ירקות', 'לחם', 'חלבוןות', 'שומנים', 'משקאות', 'אחר'];
-            const emojis = { 'ארוחת בוקר': '🌅', 'בשרים': '🥩', 'פחמימות': '🍚', 'ירקות': '🥕', 'לחם': '🍞', 'חלבוןות': '🥚', 'שומנים': '🫒', 'משקאות': '💧', 'אחר': '⚙️' };
-
-            categoryOrder.forEach(category => {
-                if (categories[category]) {
-                    html += `<div class="category-section">
-                        <div class="category-title">${emojis[category]} ${category}</div>
-                        <div class="item-list">`;
-                    
-                    categories[category].forEach(item => {
-                        const qty = item.quantity % 1 === 0 ? item.quantity : item.quantity.toFixed(1);
-                        html += `<div class="item">
-                            <span class="item-name">${item.name}</span>
-                            <span class="item-quantity">${qty}${item.unit}</span>
-                        </div>`;
+        function displayShoppingList(ca) {
+            const c = document.getElementById('shoppingListContent');
+            let h = '';
+            const o = ['ארוחה', 'בשרים', 'פחמימות', 'ירקות'];
+            const e = {'ארוחה': '🌅', 'בשרים': '🥩', 'פחמימות': '🍚', 'ירקות': '🥕'};
+            o.forEach(cat => {
+                if (ca[cat]) {
+                    h += `<div class="category-section"><div class="category-title">${e[cat]} ${cat}</div><div class="item-list">`;
+                    ca[cat].forEach(i => {
+                        const q = i.quantity % 1 === 0 ? i.quantity : i.quantity.toFixed(1);
+                        h += `<div class="item"><span class="item-name">${i.name}</span><div class="item-qty"><span class="item-quantity">${q}${i.unit}</span><div class="item-controls"><button class="edit-btn" onclick="editItem('${i.name}', ${i.quantity}, '${i.unit}')">✏️</button><button class="delete-btn" onclick="deleteItem('${i.name}')">🗑️</button></div></div></div>`;
                     });
-                    
-                    html += `</div></div>`;
+                    h += `</div></div>`;
                 }
             });
-
-            container.innerHTML = html;
+            c.innerHTML = h;
             document.getElementById('shoppingListContainer').style.display = 'block';
+            document.getElementById('noList').style.display = 'none';
+        }
+
+        function editItem(n, q, u) {
+            document.getElementById('editItemName').value = n;
+            document.getElementById('editItemQty').value = q;
+            document.getElementById('editItemUnit').value = u;
+            document.getElementById('editModal').classList.add('show');
+        }
+
+        function closeEdit() {
+            document.getElementById('editModal').classList.remove('show');
+        }
+
+        function saveEdit() {
+            const n = document.getElementById('editItemName').value;
+            const nq = parseFloat(document.getElementById('editItemQty').value);
+            const nu = document.getElementById('editItemUnit').value;
+            if (isNaN(nq)) { alert('מספר'); return; }
+            Object.values(shoppingList).flat().forEach(i => {
+                if (i.name === n) { i.quantity = nq; i.unit = nu; }
+            });
+            displayShoppingList(shoppingList);
+            closeEdit();
+        }
+
+        function deleteItem(n) {
+            Object.keys(shoppingList).forEach(c => {
+                shoppingList[c] = shoppingList[c].filter(i => i.name !== n);
+            });
+            displayShoppingList(shoppingList);
         }
     </script>
 </body>
