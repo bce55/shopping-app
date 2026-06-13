@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#667eea">
     <link rel="manifest" href="manifest.json">
-    <title>🛒 בונה קניות חכם V3</title>
+    <title>🛒 בונה קניות חכם - V4 FINAL</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -39,14 +39,14 @@
         }
         .tab-btn {
             flex: 1;
-            min-width: 100px;
+            min-width: 90px;
             padding: 12px;
             border: none;
             background: none;
             cursor: pointer;
             font-weight: 600;
             color: #666;
-            font-size: 0.9em;
+            font-size: 0.85em;
         }
         .tab-btn.active {
             background: white;
@@ -69,13 +69,15 @@
         }
         .section h2 { color: #333; margin-bottom: 12px; font-size: 1.1em; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        input[type="number"], input[type="text"] {
+        input[type="number"], input[type="text"], select {
             width: 100%;
             padding: 8px;
             border: 2px solid #ddd;
             border-radius: 6px;
             margin-bottom: 8px;
+            font-size: 0.95em;
         }
+        label { display: block; font-weight: 600; color: #555; margin-top: 8px; margin-bottom: 4px; }
         button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -85,25 +87,27 @@
             cursor: pointer;
             font-weight: 600;
             margin: 5px;
+            font-size: 0.95em;
         }
         button:hover { opacity: 0.9; }
         .btn-delete { background: #dc3545; padding: 5px 10px; font-size: 0.8em; }
         .btn-edit { background: #007bff; padding: 5px 10px; font-size: 0.8em; }
         .btn-add { background: #28a745; }
+        .btn-create { background: #ff9800; padding: 12px 20px; font-size: 1em; width: 100%; }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
-            font-size: 0.9em;
+            font-size: 0.85em;
         }
         table th {
             background: #667eea;
             color: white;
-            padding: 10px;
+            padding: 8px;
             text-align: right;
         }
         table td {
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #ddd;
             text-align: right;
         }
@@ -123,34 +127,56 @@
             padding: 20px;
             border-radius: 10px;
             width: 90%;
-            max-width: 400px;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
         }
         .modal-buttons { display: flex; gap: 10px; margin-top: 15px; }
         .modal-buttons button { flex: 1; margin: 0; }
-        .item-controls { display: flex; gap: 5px; }
-        .nutrition-box {
-            background: #e3f2fd;
+        .meal-counter {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 8px 0;
+            border-right: 4px solid #667eea;
+            font-weight: 600;
+            color: #667eea;
+        }
+        .shopping-item {
+            background: white;
             padding: 12px;
             border-radius: 8px;
             margin: 8px 0;
-            border-right: 4px solid #2196F3;
+            border-right: 4px solid #70ad47;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .shopping-category {
+            background: #70ad47;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 12px;
+            margin-bottom: 8px;
         }
         @media (max-width: 768px) {
             .grid { grid-template-columns: 1fr; }
             .tabs { flex-wrap: wrap; }
-            .tab-btn { font-size: 0.8em; padding: 8px; }
+            .tab-btn { font-size: 0.75em; padding: 8px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🛒 בונה קניות חכם V3</h1>
-            <p>איתם ועדי</p>
+            <h1>🛒 בונה קניות חכם</h1>
+            <p>איתם ועדי - תכנון שבועי</p>
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab(0)">📋 בנייה</button>
+            <button class="tab-btn active" onclick="switchTab(0)">🍽️ בנייה</button>
             <button class="tab-btn" onclick="switchTab(1)">📊 טבלאות</button>
             <button class="tab-btn" onclick="switchTab(2)">🛍️ קניות</button>
             <button class="tab-btn" onclick="switchTab(3)">🥗 תזונה</button>
@@ -160,48 +186,70 @@
         <div class="content">
             <!-- TAB 1: בנייה -->
             <div class="tab-content active">
-                <div class="grid">
-                    <div class="section">
-                        <h2>🥩 בחרו ארוחות</h2>
+                <div class="section">
+                    <h2>🍗 בחרו ארוחות בשר לשבוע</h2>
+                    <div class="grid">
                         <div>
-                            <label>דג לבן</label>
-                            <input type="number" id="dagLaban" min="0" value="0">
+                            <h3>איתם - כמה ארוחות של כל סוג?</h3>
+                            <label>🐟 דג לבן</label>
+                            <input type="number" id="itam_fish" min="0" max="7" value="2">
+                            <div class="meal-counter" id="itam_fish_counter"></div>
+
+                            <label>🐠 סלמון</label>
+                            <input type="number" id="itam_salmon" min="0" max="7" value="1">
+                            <div class="meal-counter" id="itam_salmon_counter"></div>
+
+                            <label>🥩 בקר</label>
+                            <input type="number" id="itam_beef" min="0" max="7" value="2">
+                            <div class="meal-counter" id="itam_beef_counter"></div>
+
+                            <label>🍗 עוף</label>
+                            <input type="number" id="itam_chicken" min="0" max="7" value="1">
+                            <div class="meal-counter" id="itam_chicken_counter"></div>
+
+                            <label>🟫 טופו</label>
+                            <input type="number" id="itam_tofu" min="0" max="7" value="1">
+                            <div class="meal-counter" id="itam_tofu_counter"></div>
                         </div>
+
                         <div>
-                            <label>סלמון</label>
-                            <input type="number" id="salmon" min="0" value="0">
+                            <h3>עדי - כמה ארוחות של כל סוג?</h3>
+                            <label>🐟 דג לבן</label>
+                            <input type="number" id="edi_fish" min="0" max="7" value="2">
+                            <div class="meal-counter" id="edi_fish_counter"></div>
+
+                            <label>🐠 סלמון</label>
+                            <input type="number" id="edi_salmon" min="0" max="7" value="1">
+                            <div class="meal-counter" id="edi_salmon_counter"></div>
+
+                            <label>🥩 בקר</label>
+                            <input type="number" id="edi_beef" min="0" max="7" value="2">
+                            <div class="meal-counter" id="edi_beef_counter"></div>
+
+                            <label>🍗 עוף</label>
+                            <input type="number" id="edi_chicken" min="0" max="7" value="1">
+                            <div class="meal-counter" id="edi_chicken_counter"></div>
+
+                            <label>🟫 טופו</label>
+                            <input type="number" id="edi_tofu" min="0" max="7" value="1">
+                            <div class="meal-counter" id="edi_tofu_counter"></div>
                         </div>
-                        <div>
-                            <label>בקר</label>
-                            <input type="number" id="beef" min="0" value="0">
-                        </div>
-                        <div>
-                            <label>עוף</label>
-                            <input type="number" id="chicken" min="0" value="0">
-                        </div>
-                        <div>
-                            <label>טופו</label>
-                            <input type="number" id="tofu" min="0" value="0">
-                        </div>
-                        <button onclick="calculateShoppingList()">📋 חשב</button>
-                    </div>
-                    <div class="section">
-                        <h2>📊 סיכום</h2>
-                        <div style="font-size: 1.3em; color: #667eea; font-weight: 600;" id="totalMeals">0 ארוחות</div>
                     </div>
                 </div>
+
+                <button class="btn-create" onclick="createShoppingList()">📋 צור רשימת קניות לשבוע</button>
             </div>
 
             <!-- TAB 2: טבלאות -->
             <div class="tab-content">
                 <div class="section">
-                    <h2>איתם - רשימת מרכיבים יומית</h2>
-                    <button class="btn-add" onclick="addMealDialog('itam')">➕ הוסף מרכיב</button>
+                    <h2>איתם - מרכיבים יומיים</h2>
+                    <button class="btn-add" onclick="editItemDialog('itam', -1)">➕ הוסף</button>
                     <table id="itamTable">
                         <thead>
                             <tr>
                                 <th>פעולה</th>
-                                <th>כמות יומית</th>
+                                <th>כמות</th>
                                 <th>יחידה</th>
                                 <th>מרכיב</th>
                             </tr>
@@ -211,13 +259,13 @@
                 </div>
 
                 <div class="section">
-                    <h2>עדי - רשימת מרכיבים יומית</h2>
-                    <button class="btn-add" onclick="addMealDialog('edi')">➕ הוסף מרכיב</button>
+                    <h2>עדי - מרכיבים יומיים</h2>
+                    <button class="btn-add" onclick="editItemDialog('edi', -1)">➕ הוסף</button>
                     <table id="ediTable">
                         <thead>
                             <tr>
                                 <th>פעולה</th>
-                                <th>כמות יומית</th>
+                                <th>כמות</th>
                                 <th>יחידה</th>
                                 <th>מרכיב</th>
                             </tr>
@@ -229,23 +277,26 @@
 
             <!-- TAB 3: קניות -->
             <div class="tab-content">
-                <div class="section" id="shoppingListSection" style="display: none;">
-                    <h2>🛍️ רשימת קניות שבועית</h2>
-                    <div id="shoppingListContent"></div>
-                </div>
                 <div id="noShoppingList" style="text-align: center; padding: 40px; color: #999;">
-                    <p>📋 חשבו את הקניות מהטאב "בנייה"</p>
+                    <p style="font-size: 1.2em;">📋</p>
+                    <p>צרו רשימה מהטאב "בנייה"</p>
+                </div>
+                <div id="shoppingListSection" style="display: none;">
+                    <div class="section">
+                        <h2>🛍️ רשימת קניות שבועית מלאה</h2>
+                        <div id="shoppingListContent"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- TAB 4: תזונה -->
             <div class="tab-content">
                 <div class="section">
-                    <h2>🥗 חישובים תזונתיים יומיים - איתם</h2>
+                    <h2>🥗 איתם - חישוב תזונתי יומי</h2>
                     <div id="itamNutrition"></div>
                 </div>
                 <div class="section">
-                    <h2>🥗 חישובים תזונתיים יומיים - עדי</h2>
+                    <h2>🥗 עדי - חישוב תזונתי יומי</h2>
                     <div id="ediNutrition"></div>
                 </div>
             </div>
@@ -254,7 +305,7 @@
             <div class="tab-content">
                 <div class="section">
                     <h2>🍳 מתכונים</h2>
-                    <button class="btn-add" onclick="addRecipeDialog()">➕ הוסף מתכון</button>
+                    <button class="btn-add" onclick="editRecipeDialog(-1)">➕ הוסף מתכון</button>
                     <div id="recipesList"></div>
                 </div>
             </div>
@@ -264,7 +315,7 @@
     <!-- MODAL -->
     <div class="modal" id="modal">
         <div class="modal-content">
-            <h3 id="modalTitle">מתכון חדש</h3>
+            <h3 id="modalTitle">עדכון</h3>
             <div id="modalBody"></div>
             <div class="modal-buttons">
                 <button onclick="saveModal()" style="background: #28a745;">💾 שמור</button>
@@ -274,26 +325,37 @@
     </div>
 
     <script>
-        let itamMeals = JSON.parse(localStorage.getItem('itamMeals')) || [
-            {name: 'דג לבן', qty: 250, unit: 'גרם'},
-            {name: 'סלמון', qty: 220, unit: 'גרם'},
-            {name: 'בקר', qty: 250, unit: 'גרם'},
-            {name: 'עוף', qty: 250, unit: 'גרם'},
+        // נתונים אחסון
+        let itamItems = JSON.parse(localStorage.getItem('itamItems')) || [
+            {name: 'מעדן חלבון', qty: 1, unit: 'יח\''},
+            {name: 'בננה', qty: 2, unit: 'יח\''},
             {name: 'אורז', qty: 150, unit: 'גרם'},
-            {name: 'בטטה', qty: 200, unit: 'גרם'},
+            {name: 'עגבניה', qty: 200, unit: 'גרם'},
+            {name: 'מלפפון', qty: 150, unit: 'גרם'},
+            {name: 'לחם קל', qty: 4, unit: 'פרוסות'},
+            {name: 'קוטג\' 3%', qty: 60, unit: 'גרם'},
+            {name: 'גבינה לבנה', qty: 60, unit: 'גרם'},
+            {name: 'ביצה', qty: 1, unit: 'יח\''},
+            {name: 'מים', qty: 1000, unit: 'מ"ל'}
         ];
 
-        let ediMeals = JSON.parse(localStorage.getItem('ediMeals')) || [
-            {name: 'דג לבן', qty: 160, unit: 'גרם'},
-            {name: 'סלמון', qty: 120, unit: 'גרם'},
-            {name: 'בקר', qty: 160, unit: 'גרם'},
-            {name: 'עוף', qty: 160, unit: 'גרם'},
-            {name: 'אורז', qty: 84, unit: 'גרם'},
-            {name: 'בטטה', qty: 112, unit: 'גרם'},
+        let ediItems = JSON.parse(localStorage.getItem('ediItems')) || [
+            {name: 'מעדן חלבון', qty: 1, unit: 'יח\''},
+            {name: '5 שקדים', qty: 1, unit: 'יח\''},
+            {name: 'בננה', qty: 1, unit: 'יח\''},
+            {name: 'אורז', qty: 120, unit: 'גרם'},
+            {name: 'עגבניה', qty: 300, unit: 'גרם'},
+            {name: 'מלפפון', qty: 200, unit: 'גרם'},
+            {name: 'לחם קל', qty: 2, unit: 'פרוסות'},
+            {name: 'חטיף חלבון', qty: 1, unit: 'יח\''},
+            {name: 'קוטג\' 3%', qty: 60, unit: 'גרם'},
+            {name: 'טחינה', qty: 10, unit: 'גרם'},
+            {name: 'מים', qty: 800, unit: 'מ"ל'}
         ];
 
         let recipes = JSON.parse(localStorage.getItem('recipes')) || [];
         let currentModal = null;
+        let currentShoppingList = null;
 
         function switchTab(i) {
             document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
@@ -301,105 +363,216 @@
             document.querySelectorAll('.tab-content')[i].classList.add('active');
             document.querySelectorAll('.tab-btn')[i].classList.add('active');
             
-            if (i === 3) updateNutrition();
-            if (i === 1) { renderMealsTable('itam'); renderMealsTable('edi'); }
+            if (i === 1) { renderTable('itam'); renderTable('edi'); }
             if (i === 4) renderRecipes();
         }
 
-        function renderMealsTable(person) {
-            const meals = person === 'itam' ? itamMeals : ediMeals;
+        function updateCounters() {
+            const meats = {
+                fish: {itam: 250, edi: 160},
+                salmon: {itam: 220, edi: 120},
+                beef: {itam: 250, edi: 160},
+                chicken: {itam: 250, edi: 160},
+                tofu: {itam: 250, edi: 160}
+            };
+
+            ['fish', 'salmon', 'beef', 'chicken', 'tofu'].forEach(type => {
+                ['itam', 'edi'].forEach(person => {
+                    const meals = parseInt(document.getElementById(person + '_' + type).value) || 0;
+                    const weight = meats[type][person];
+                    const total = meals * weight;
+                    document.getElementById(person + '_' + type + '_counter').textContent = 
+                        `${meals} × ${weight}ג = ${total}ג`;
+                });
+            });
+        }
+
+        function createShoppingList() {
+            const itamMeals = {
+                fish: parseInt(document.getElementById('itam_fish').value) || 0,
+                salmon: parseInt(document.getElementById('itam_salmon').value) || 0,
+                beef: parseInt(document.getElementById('itam_beef').value) || 0,
+                chicken: parseInt(document.getElementById('itam_chicken').value) || 0,
+                tofu: parseInt(document.getElementById('itam_tofu').value) || 0
+            };
+
+            const ediMeals = {
+                fish: parseInt(document.getElementById('edi_fish').value) || 0,
+                salmon: parseInt(document.getElementById('edi_salmon').value) || 0,
+                beef: parseInt(document.getElementById('edi_beef').value) || 0,
+                chicken: parseInt(document.getElementById('edi_chicken').value) || 0,
+                tofu: parseInt(document.getElementById('edi_tofu').value) || 0
+            };
+
+            const list = {};
+
+            // בשרים
+            list['בשרים'] = [];
+            const meatTypes = {
+                fish: 'דג לבן',
+                salmon: 'סלמון',
+                beef: 'בקר',
+                chicken: 'עוף',
+                tofu: 'טופו'
+            };
+            const meatWeights = {
+                fish: {itam: 250, edi: 160},
+                salmon: {itam: 220, edi: 120},
+                beef: {itam: 250, edi: 160},
+                chicken: {itam: 250, edi: 160},
+                tofu: {itam: 250, edi: 160}
+            };
+
+            Object.entries(meatTypes).forEach(([key, name]) => {
+                const itamQty = itamMeals[key] * meatWeights[key].itam;
+                const ediQty = ediMeals[key] * meatWeights[key].edi;
+                if (itamQty > 0 || ediQty > 0) {
+                    list['בשרים'].push({
+                        name: name,
+                        qty: itamQty + ediQty,
+                        unit: 'גרם'
+                    });
+                }
+            });
+
+            // מרכיבים אחרים × 7
+            ['מרכיבים נוספים', 'ירקות ופירות'].forEach(category => {
+                list[category] = [];
+            });
+
+            itamItems.forEach(item => {
+                if (item.name !== 'בשר' && item.name !== 'מעדן חלבון' && item.name !== 'חטיף חלבון') {
+                    list['מרכיבים נוספים'].push({
+                        name: 'איתם: ' + item.name,
+                        qty: item.qty * 7,
+                        unit: item.unit
+                    });
+                }
+            });
+
+            ediItems.forEach(item => {
+                if (item.name !== 'בשר' && item.name !== 'מעדן חלבון' && item.name !== 'חטיף חלבון') {
+                    list['מרכיבים נוספים'].push({
+                        name: 'עדי: ' + item.name,
+                        qty: item.qty * 7,
+                        unit: item.unit
+                    });
+                }
+            });
+
+            // מעדנים וחטיפים
+            list['מעדנים וחטיפים'] = [
+                {name: 'מעדן חלבון - איתם', qty: 7, unit: 'יח\''},
+                {name: 'מעדן חלבון - עדי', qty: 7, unit: 'יח\''},
+                {name: 'חטיף חלבון - עדי', qty: 7, unit: 'יח\''}
+            ];
+
+            currentShoppingList = list;
+            displayShoppingList(list);
+            switchTab(2);
+        }
+
+        function displayShoppingList(list) {
+            document.getElementById('noShoppingList').style.display = 'none';
+            document.getElementById('shoppingListSection').style.display = 'block';
+
+            let html = '';
+            Object.entries(list).forEach(([category, items]) => {
+                if (items.length > 0) {
+                    html += `<div class="shopping-category">${category}</div>`;
+                    items.forEach(item => {
+                        html += `<div class="shopping-item">
+                            <span>${item.name}</span>
+                            <span style="background: #70ad47; color: white; padding: 6px 12px; border-radius: 6px; font-weight: 600;">${item.qty}${item.unit}</span>
+                        </div>`;
+                    });
+                }
+            });
+
+            document.getElementById('shoppingListContent').innerHTML = html;
+        }
+
+        function renderTable(person) {
+            const items = person === 'itam' ? itamItems : ediItems;
             const tbody = document.getElementById(person + 'Body');
-            tbody.innerHTML = meals.map((m, i) => `
+            tbody.innerHTML = items.map((item, i) => `
                 <tr>
                     <td>
-                        <button class="btn-edit" onclick="editMealDialog('${person}', ${i})">✏️</button>
-                        <button class="btn-delete" onclick="deleteMeal('${person}', ${i})">🗑️</button>
+                        <button class="btn-edit" onclick="editItemDialog('${person}', ${i})">✏️</button>
+                        <button class="btn-delete" onclick="deleteItem('${person}', ${i})">🗑️</button>
                     </td>
-                    <td>${m.qty}</td>
-                    <td>${m.unit}</td>
-                    <td>${m.name}</td>
+                    <td>${item.qty}</td>
+                    <td>${item.unit}</td>
+                    <td>${item.name}</td>
                 </tr>
             `).join('');
         }
 
-        function addMealDialog(person) {
-            currentModal = {type: 'meal', person, index: -1};
-            document.getElementById('modalTitle').textContent = 'הוסף מרכיב';
+        function editItemDialog(person, index) {
+            const items = person === 'itam' ? itamItems : ediItems;
+            const item = index === -1 ? {name: '', qty: 0, unit: 'גרם'} : items[index];
+            
+            currentModal = {type: 'item', person, index};
+            document.getElementById('modalTitle').textContent = index === -1 ? 'הוסף מרכיב' : 'ערוך מרכיב';
             document.getElementById('modalBody').innerHTML = `
-                <input type="text" id="modalName" placeholder="שם המרכיב">
-                <input type="number" id="modalQty" placeholder="כמות יומית">
-                <input type="text" id="modalUnit" placeholder="יחידה (גרם, יח', וכו')">
+                <label>שם המרכיב</label>
+                <input type="text" id="itemName" value="${item.name}">
+                <label>כמות יומית</label>
+                <input type="number" id="itemQty" value="${item.qty}" step="0.1">
+                <label>יחידה</label>
+                <input type="text" id="itemUnit" value="${item.unit}">
             `;
             document.getElementById('modal').classList.add('show');
         }
 
-        function editMealDialog(person, index) {
-            const meals = person === 'itam' ? itamMeals : ediMeals;
-            const m = meals[index];
-            currentModal = {type: 'meal', person, index};
-            document.getElementById('modalTitle').textContent = 'ערוך מרכיב';
-            document.getElementById('modalBody').innerHTML = `
-                <input type="text" id="modalName" value="${m.name}">
-                <input type="number" id="modalQty" value="${m.qty}">
-                <input type="text" id="modalUnit" value="${m.unit}">
-            `;
-            document.getElementById('modal').classList.add('show');
+        function deleteItem(person, index) {
+            const items = person === 'itam' ? itamItems : ediItems;
+            items.splice(index, 1);
+            localStorage.setItem(person + 'Items', JSON.stringify(items));
+            renderTable(person);
         }
 
-        function deleteMeal(person, index) {
-            if (person === 'itam') {
-                itamMeals.splice(index, 1);
-                localStorage.setItem('itamMeals', JSON.stringify(itamMeals));
-            } else {
-                ediMeals.splice(index, 1);
-                localStorage.setItem('ediMeals', JSON.stringify(ediMeals));
-            }
-            renderMealsTable(person);
-        }
-
-        function addRecipeDialog() {
-            currentModal = {type: 'recipe', index: -1};
-            document.getElementById('modalTitle').textContent = 'מתכון חדש';
+        function editRecipeDialog(index) {
+            const recipe = index === -1 ? {name: '', ingredients: '', notes: ''} : recipes[index];
+            currentModal = {type: 'recipe', index};
+            document.getElementById('modalTitle').textContent = index === -1 ? 'מתכון חדש' : 'ערוך מתכון';
             document.getElementById('modalBody').innerHTML = `
-                <input type="text" id="recipeName" placeholder="שם המתכון">
-                <textarea id="recipeIngredients" placeholder="מרכיבים (כל מרכיב בשורה)" rows="5" style="width: 100%; padding: 8px;"></textarea>
-                <input type="text" id="recipeNotes" placeholder="הערות">
+                <label>שם המתכון</label>
+                <input type="text" id="recipeName" value="${recipe.name}">
+                <label>מרכיבים (כל אחד בשורה)</label>
+                <textarea id="recipeIngs" style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 6px;" rows="5">${recipe.ingredients}</textarea>
+                <label>הערות</label>
+                <input type="text" id="recipeNotes" value="${recipe.notes}">
             `;
             document.getElementById('modal').classList.add('show');
         }
 
         function saveModal() {
-            if (currentModal.type === 'meal') {
-                const name = document.getElementById('modalName').value;
-                const qty = parseFloat(document.getElementById('modalQty').value);
-                const unit = document.getElementById('modalUnit').value;
+            if (currentModal.type === 'item') {
+                const name = document.getElementById('itemName').value;
+                const qty = parseFloat(document.getElementById('itemQty').value);
+                const unit = document.getElementById('itemUnit').value;
                 
-                if (!name || isNaN(qty) || !unit) { alert('מלאו את כל השדות'); return; }
+                if (!name || isNaN(qty)) { alert('מלאו את השדות'); return; }
                 
-                const meal = {name, qty, unit};
-                const meals = currentModal.person === 'itam' ? itamMeals : ediMeals;
+                const items = currentModal.person === 'itam' ? itamItems : ediItems;
+                const item = {name, qty, unit};
                 
-                if (currentModal.index === -1) {
-                    meals.push(meal);
-                } else {
-                    meals[currentModal.index] = meal;
-                }
+                if (currentModal.index === -1) items.push(item);
+                else items[currentModal.index] = item;
                 
-                localStorage.setItem(currentModal.person + 'Meals', JSON.stringify(meals));
-                renderMealsTable(currentModal.person);
+                localStorage.setItem(currentModal.person + 'Items', JSON.stringify(items));
+                renderTable(currentModal.person);
             } else if (currentModal.type === 'recipe') {
                 const name = document.getElementById('recipeName').value;
-                const ingredients = document.getElementById('recipeIngredients').value.split('\n').filter(i => i.trim());
+                const ingredients = document.getElementById('recipeIngs').value;
                 const notes = document.getElementById('recipeNotes').value;
                 
-                if (!name || ingredients.length === 0) { alert('הוסיפו שם ומרכיבים'); return; }
+                if (!name || !ingredients) { alert('הוסיפו שם ומרכיבים'); return; }
                 
                 const recipe = {name, ingredients, notes};
-                if (currentModal.index === -1) {
-                    recipes.push(recipe);
-                } else {
-                    recipes[currentModal.index] = recipe;
-                }
+                if (currentModal.index === -1) recipes.push(recipe);
+                else recipes[currentModal.index] = recipe;
                 
                 localStorage.setItem('recipes', JSON.stringify(recipes));
                 renderRecipes();
@@ -415,24 +588,12 @@
             document.getElementById('recipesList').innerHTML = recipes.map((r, i) => `
                 <div style="background: #fff; padding: 12px; border-radius: 8px; margin: 10px 0; border-right: 4px solid #ff9800;">
                     <h3>${r.name}</h3>
-                    <p><strong>מרכיבים:</strong> ${r.ingredients.join(', ')}</p>
+                    <p><strong>מרכיבים:</strong> ${r.ingredients.split('\n').join(', ')}</p>
                     <p><strong>הערות:</strong> ${r.notes || 'אין'}</p>
                     <button class="btn-edit" onclick="editRecipeDialog(${i})">✏️ ערוך</button>
                     <button class="btn-delete" onclick="deleteRecipe(${i})">🗑️ מחק</button>
                 </div>
             `).join('');
-        }
-
-        function editRecipeDialog(index) {
-            const r = recipes[index];
-            currentModal = {type: 'recipe', index};
-            document.getElementById('modalTitle').textContent = 'ערוך מתכון';
-            document.getElementById('modalBody').innerHTML = `
-                <input type="text" id="recipeName" value="${r.name}">
-                <textarea id="recipeIngredients" rows="5" style="width: 100%; padding: 8px;">${r.ingredients.join('\n')}</textarea>
-                <input type="text" id="recipeNotes" value="${r.notes || ''}">
-            `;
-            document.getElementById('modal').classList.add('show');
         }
 
         function deleteRecipe(index) {
@@ -441,36 +602,22 @@
             renderRecipes();
         }
 
-        function calculateShoppingList() {
-            // פשוט חישוב פשוט
-            document.getElementById('shoppingListSection').style.display = 'block';
-            document.getElementById('noShoppingList').style.display = 'none';
-            document.getElementById('shoppingListContent').innerHTML = '<p>רשימה שבועית (בהמשך יתעדכן)</p>';
-        }
-
-        function updateNutrition() {
-            // חישוב בסיסי - אפשר לשפר
-            document.getElementById('itamNutrition').innerHTML = `
-                <div class="nutrition-box">
-                    <strong>חלבון:</strong> ~120ג ליום<br>
-                    <strong>פחמימות:</strong> ~150ג ליום<br>
-                    <strong>שומנים:</strong> ~50ג ליום
-                </div>
-            `;
-            document.getElementById('ediNutrition').innerHTML = `
-                <div class="nutrition-box">
-                    <strong>חלבון:</strong> ~100ג ליום<br>
-                    <strong>פחמימות:</strong> ~120ג ליום<br>
-                    <strong>שומנים:</strong> ~40ג ליום
-                </div>
-            `;
-        }
-
         window.addEventListener('DOMContentLoaded', () => {
-            renderMealsTable('itam');
-            renderMealsTable('edi');
+            renderTable('itam');
+            renderTable('edi');
             renderRecipes();
+            updateCounters();
+
+            ['fish', 'salmon', 'beef', 'chicken', 'tofu'].forEach(type => {
+                ['itam', 'edi'].forEach(person => {
+                    document.getElementById(person + '_' + type).addEventListener('change', updateCounters);
+                });
+            });
         });
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js').catch(() => {});
+        }
     </script>
 </body>
 </html>
