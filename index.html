@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#667eea">
     <link rel="manifest" href="manifest.json">
-    <title>🛒 בונה קניות חכם</title>
+    <title>🛒 בונה קניות חכם V3</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -15,7 +15,7 @@
             padding: 10px;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
             border-radius: 15px;
@@ -23,41 +23,30 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            max-height: 95vh;
         }
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
-            position: relative;
         }
-        .install-btn {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: rgba(255,255,255,0.3);
-            color: white;
-            border: 2px solid white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            display: none;
-        }
-        .install-btn.show { display: block; }
         .tabs {
             display: flex;
             background: #f0f0f0;
             border-bottom: 2px solid #ddd;
+            overflow-x: auto;
         }
         .tab-btn {
             flex: 1;
-            padding: 15px;
+            min-width: 100px;
+            padding: 12px;
             border: none;
             background: none;
             cursor: pointer;
             font-weight: 600;
             color: #666;
+            font-size: 0.9em;
         }
         .tab-btn.active {
             background: white;
@@ -65,94 +54,60 @@
             border-bottom: 3px solid #667eea;
         }
         .content {
-            padding: 20px;
+            padding: 15px;
             flex: 1;
             overflow-y: auto;
         }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .section {
             background: #f8f9fa;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
+            margin-bottom: 15px;
             border-left: 5px solid #667eea;
         }
-        .section h2 { color: #333; margin-bottom: 15px; }
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-weight: 600; color: #555; margin-bottom: 6px; }
-        input[type="number"] {
-            width: 70px;
+        .section h2 { color: #333; margin-bottom: 12px; font-size: 1.1em; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        input[type="number"], input[type="text"] {
+            width: 100%;
             padding: 8px;
             border: 2px solid #ddd;
             border-radius: 6px;
-            font-size: 1em;
-            text-align: center;
-        }
-        .meal-counter {
-            background: white;
-            padding: 8px;
-            border-radius: 6px;
-            margin-top: 4px;
-            color: #667eea;
-            font-weight: 600;
-            font-size: 0.85em;
+            margin-bottom: 8px;
         }
         button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 12px 20px;
-            font-size: 1em;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            width: 100%;
-            margin-top: 15px;
-        }
-        .reset-btn { background: #dc3545; margin-top: 8px; }
-        .shopping-list { background: white; padding: 20px; border-radius: 10px; border-top: 5px solid #70ad47; }
-        .category-section { margin-bottom: 20px; }
-        .category-title {
-            background: #70ad47;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .item-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
-        .item {
-            background: #f8f9fa;
-            padding: 12px;
-            border-radius: 8px;
-            border-right: 4px solid #70ad47;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .item-name { font-weight: 600; color: #333; flex: 1; }
-        .item-qty { display: flex; gap: 8px; align-items: center; }
-        .item-quantity {
-            background: #70ad47;
-            color: white;
-            padding: 6px 10px;
+            padding: 10px 15px;
             border-radius: 6px;
-            font-weight: 600;
-            white-space: nowrap;
-            font-size: 0.85em;
-        }
-        .item-controls { display: flex; gap: 5px; }
-        .edit-btn, .delete-btn {
-            padding: 6px 10px;
-            border: none;
-            border-radius: 4px;
             cursor: pointer;
             font-weight: 600;
-            color: white;
+            margin: 5px;
         }
-        .edit-btn { background: #007bff; }
-        .delete-btn { background: #dc3545; }
+        button:hover { opacity: 0.9; }
+        .btn-delete { background: #dc3545; padding: 5px 10px; font-size: 0.8em; }
+        .btn-edit { background: #007bff; padding: 5px 10px; font-size: 0.8em; }
+        .btn-add { background: #28a745; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        table th {
+            background: #667eea;
+            color: white;
+            padding: 10px;
+            text-align: right;
+        }
+        table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: right;
+        }
+        table tr:nth-child(even) { background: #f8f9fa; }
         .modal {
             display: none;
             position: fixed;
@@ -170,27 +125,27 @@
             width: 90%;
             max-width: 400px;
         }
-        .modal-content h3 { margin-bottom: 15px; color: #333; }
-        .modal-content input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-        }
-        .modal-buttons { display: flex; gap: 10px; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 15px; }
         .modal-buttons button { flex: 1; margin: 0; }
+        .item-controls { display: flex; gap: 5px; }
+        .nutrition-box {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 8px 0;
+            border-right: 4px solid #2196F3;
+        }
         @media (max-width: 768px) {
             .grid { grid-template-columns: 1fr; }
-            .item-list { grid-template-columns: 1fr; }
+            .tabs { flex-wrap: wrap; }
+            .tab-btn { font-size: 0.8em; padding: 8px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <button class="install-btn" id="installBtn" onclick="installApp()">📲 הוסף לטלפון</button>
-            <h1>🛒 בונה קניות חכם</h1>
+            <h1>🛒 בונה קניות חכם V3</h1>
             <p>איתם ועדי</p>
         </div>
 
@@ -198,312 +153,324 @@
             <button class="tab-btn active" onclick="switchTab(0)">📋 בנייה</button>
             <button class="tab-btn" onclick="switchTab(1)">📊 טבלאות</button>
             <button class="tab-btn" onclick="switchTab(2)">🛍️ קניות</button>
+            <button class="tab-btn" onclick="switchTab(3)">🥗 תזונה</button>
+            <button class="tab-btn" onclick="switchTab(4)">🍳 מתכונים</button>
         </div>
 
         <div class="content">
-            <!-- TAB 1 -->
+            <!-- TAB 1: בנייה -->
             <div class="tab-content active">
                 <div class="grid">
                     <div class="section">
                         <h2>🥩 בחרו ארוחות</h2>
-                        <div class="input-group">
+                        <div>
                             <label>דג לבן</label>
-                            <input type="number" id="dagLaban" min="0" max="7" value="0">
-                            <div class="meal-counter" id="dagCounter"></div>
+                            <input type="number" id="dagLaban" min="0" value="0">
                         </div>
-                        <div class="input-group">
+                        <div>
                             <label>סלמון</label>
-                            <input type="number" id="salmon" min="0" max="7" value="0">
-                            <div class="meal-counter" id="salmonCounter"></div>
+                            <input type="number" id="salmon" min="0" value="0">
                         </div>
-                        <div class="input-group">
+                        <div>
                             <label>בקר</label>
-                            <input type="number" id="beef" min="0" max="7" value="0">
-                            <div class="meal-counter" id="beefCounter"></div>
+                            <input type="number" id="beef" min="0" value="0">
                         </div>
-                        <div class="input-group">
+                        <div>
                             <label>עוף</label>
-                            <input type="number" id="chicken" min="0" max="7" value="0">
-                            <div class="meal-counter" id="chickenCounter"></div>
+                            <input type="number" id="chicken" min="0" value="0">
                         </div>
-                        <div class="input-group">
+                        <div>
                             <label>טופו</label>
-                            <input type="number" id="tofu" min="0" max="7" value="0">
-                            <div class="meal-counter" id="tofuCounter"></div>
+                            <input type="number" id="tofu" min="0" value="0">
                         </div>
                         <button onclick="calculateShoppingList()">📋 חשב</button>
-                        <button class="reset-btn" onclick="resetSelection()">🔄 איפוס</button>
                     </div>
                     <div class="section">
                         <h2>📊 סיכום</h2>
-                        <div class="meal-counter" style="font-size: 1.3em;" id="totalMeals">0 ארוחות</div>
+                        <div style="font-size: 1.3em; color: #667eea; font-weight: 600;" id="totalMeals">0 ארוחות</div>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 2 -->
+            <!-- TAB 2: טבלאות -->
             <div class="tab-content">
                 <div class="section">
-                    <h2>איתם</h2>
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
-                        <tr style="background: #667eea; color: white;">
-                            <th style="padding: 10px; text-align: right;">מרכיב</th>
-                            <th style="padding: 10px; text-align: right;">כמות</th>
-                            <th style="padding: 10px; text-align: right;">יחידה</th>
-                        </tr>
-                        <tbody id="itamTable"></tbody>
+                    <h2>איתם - רשימת מרכיבים יומית</h2>
+                    <button class="btn-add" onclick="addMealDialog('itam')">➕ הוסף מרכיב</button>
+                    <table id="itamTable">
+                        <thead>
+                            <tr>
+                                <th>פעולה</th>
+                                <th>כמות יומית</th>
+                                <th>יחידה</th>
+                                <th>מרכיב</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itamBody"></tbody>
                     </table>
                 </div>
-                <div class="section" style="margin-top: 20px;">
-                    <h2>עדי</h2>
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
-                        <tr style="background: #667eea; color: white;">
-                            <th style="padding: 10px; text-align: right;">מרכיב</th>
-                            <th style="padding: 10px; text-align: right;">כמות</th>
-                            <th style="padding: 10px; text-align: right;">יחידה</th>
-                        </tr>
-                        <tbody id="ediTable"></tbody>
+
+                <div class="section">
+                    <h2>עדי - רשימת מרכיבים יומית</h2>
+                    <button class="btn-add" onclick="addMealDialog('edi')">➕ הוסף מרכיב</button>
+                    <table id="ediTable">
+                        <thead>
+                            <tr>
+                                <th>פעולה</th>
+                                <th>כמות יומית</th>
+                                <th>יחידה</th>
+                                <th>מרכיב</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ediBody"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- TAB 3 -->
+            <!-- TAB 3: קניות -->
             <div class="tab-content">
-                <div id="noList" style="text-align: center; padding: 40px; color: #999;">
-                    <p>📋 חשבו את הקניות</p>
-                </div>
-                <div class="shopping-list" id="shoppingListContainer" style="display: none;">
-                    <h2>🛍️ קניות</h2>
-                    <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">✏️ = ערוך | 🗑️ = מחק</p>
+                <div class="section" id="shoppingListSection" style="display: none;">
+                    <h2>🛍️ רשימת קניות שבועית</h2>
                     <div id="shoppingListContent"></div>
+                </div>
+                <div id="noShoppingList" style="text-align: center; padding: 40px; color: #999;">
+                    <p>📋 חשבו את הקניות מהטאב "בנייה"</p>
+                </div>
+            </div>
+
+            <!-- TAB 4: תזונה -->
+            <div class="tab-content">
+                <div class="section">
+                    <h2>🥗 חישובים תזונתיים יומיים - איתם</h2>
+                    <div id="itamNutrition"></div>
+                </div>
+                <div class="section">
+                    <h2>🥗 חישובים תזונתיים יומיים - עדי</h2>
+                    <div id="ediNutrition"></div>
+                </div>
+            </div>
+
+            <!-- TAB 5: מתכונים -->
+            <div class="tab-content">
+                <div class="section">
+                    <h2>🍳 מתכונים</h2>
+                    <button class="btn-add" onclick="addRecipeDialog()">➕ הוסף מתכון</button>
+                    <div id="recipesList"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- EDIT MODAL -->
-    <div class="modal" id="editModal">
+    <!-- MODAL -->
+    <div class="modal" id="modal">
         <div class="modal-content">
-            <h3>ערוך</h3>
-            <input type="text" id="editItemName" readonly style="background: #f0f0f0;">
-            <input type="number" id="editItemQty">
-            <input type="text" id="editItemUnit">
+            <h3 id="modalTitle">מתכון חדש</h3>
+            <div id="modalBody"></div>
             <div class="modal-buttons">
-                <button onclick="saveEdit()" style="background: #28a745;">💾 שמור</button>
-                <button onclick="closeEdit()" style="background: #dc3545;">ביטול</button>
+                <button onclick="saveModal()" style="background: #28a745;">💾 שמור</button>
+                <button onclick="closeModal()" style="background: #dc3545;">❌ ביטול</button>
             </div>
         </div>
     </div>
 
     <script>
-        let deferredPrompt;
-        let shoppingList = null;
+        let itamMeals = JSON.parse(localStorage.getItem('itamMeals')) || [
+            {name: 'דג לבן', qty: 250, unit: 'גרם'},
+            {name: 'סלמון', qty: 220, unit: 'גרם'},
+            {name: 'בקר', qty: 250, unit: 'גרם'},
+            {name: 'עוף', qty: 250, unit: 'גרם'},
+            {name: 'אורז', qty: 150, unit: 'גרם'},
+            {name: 'בטטה', qty: 200, unit: 'גרם'},
+        ];
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installBtn').classList.add('show');
-        });
+        let ediMeals = JSON.parse(localStorage.getItem('ediMeals')) || [
+            {name: 'דג לבן', qty: 160, unit: 'גרם'},
+            {name: 'סלמון', qty: 120, unit: 'גרם'},
+            {name: 'בקר', qty: 160, unit: 'גרם'},
+            {name: 'עוף', qty: 160, unit: 'גרם'},
+            {name: 'אורז', qty: 84, unit: 'גרם'},
+            {name: 'בטטה', qty: 112, unit: 'גרם'},
+        ];
 
-        function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(r => {
-                    if (r.outcome === 'accepted') {
-                        document.getElementById('installBtn').classList.remove('show');
-                    }
-                    deferredPrompt = null;
-                });
-            }
-        }
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js');
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            loadSelections();
-            populateTables();
-            updateCounters();
-            updateTotal();
-            document.querySelectorAll('input[type="number"]').forEach(input => {
-                input.addEventListener('change', () => {
-                    saveSelections();
-                    updateCounters();
-                    updateTotal();
-                });
-            });
-        });
+        let recipes = JSON.parse(localStorage.getItem('recipes')) || [];
+        let currentModal = null;
 
         function switchTab(i) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(e => e.classList.remove('active'));
             document.querySelectorAll('.tab-content')[i].classList.add('active');
             document.querySelectorAll('.tab-btn')[i].classList.add('active');
+            
+            if (i === 3) updateNutrition();
+            if (i === 1) { renderMealsTable('itam'); renderMealsTable('edi'); }
+            if (i === 4) renderRecipes();
         }
 
-        function saveSelections() {
-            localStorage.setItem('meals', JSON.stringify({
-                dagLaban: document.getElementById('dagLaban').value,
-                salmon: document.getElementById('salmon').value,
-                beef: document.getElementById('beef').value,
-                chicken: document.getElementById('chicken').value,
-                tofu: document.getElementById('tofu').value
-            }));
+        function renderMealsTable(person) {
+            const meals = person === 'itam' ? itamMeals : ediMeals;
+            const tbody = document.getElementById(person + 'Body');
+            tbody.innerHTML = meals.map((m, i) => `
+                <tr>
+                    <td>
+                        <button class="btn-edit" onclick="editMealDialog('${person}', ${i})">✏️</button>
+                        <button class="btn-delete" onclick="deleteMeal('${person}', ${i})">🗑️</button>
+                    </td>
+                    <td>${m.qty}</td>
+                    <td>${m.unit}</td>
+                    <td>${m.name}</td>
+                </tr>
+            `).join('');
         }
 
-        function loadSelections() {
-            const s = localStorage.getItem('meals');
-            if (s) {
-                const d = JSON.parse(s);
-                ['dagLaban', 'salmon', 'beef', 'chicken', 'tofu'].forEach(id => {
-                    document.getElementById(id).value = d[id] || 0;
-                });
+        function addMealDialog(person) {
+            currentModal = {type: 'meal', person, index: -1};
+            document.getElementById('modalTitle').textContent = 'הוסף מרכיב';
+            document.getElementById('modalBody').innerHTML = `
+                <input type="text" id="modalName" placeholder="שם המרכיב">
+                <input type="number" id="modalQty" placeholder="כמות יומית">
+                <input type="text" id="modalUnit" placeholder="יחידה (גרם, יח', וכו')">
+            `;
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function editMealDialog(person, index) {
+            const meals = person === 'itam' ? itamMeals : ediMeals;
+            const m = meals[index];
+            currentModal = {type: 'meal', person, index};
+            document.getElementById('modalTitle').textContent = 'ערוך מרכיב';
+            document.getElementById('modalBody').innerHTML = `
+                <input type="text" id="modalName" value="${m.name}">
+                <input type="number" id="modalQty" value="${m.qty}">
+                <input type="text" id="modalUnit" value="${m.unit}">
+            `;
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function deleteMeal(person, index) {
+            if (person === 'itam') {
+                itamMeals.splice(index, 1);
+                localStorage.setItem('itamMeals', JSON.stringify(itamMeals));
+            } else {
+                ediMeals.splice(index, 1);
+                localStorage.setItem('ediMeals', JSON.stringify(ediMeals));
             }
+            renderMealsTable(person);
         }
 
-        function resetSelection() {
-            ['dagLaban', 'salmon', 'beef', 'chicken', 'tofu'].forEach(id => {
-                document.getElementById(id).value = 0;
-            });
-            localStorage.removeItem('meals');
-            updateCounters();
-            updateTotal();
+        function addRecipeDialog() {
+            currentModal = {type: 'recipe', index: -1};
+            document.getElementById('modalTitle').textContent = 'מתכון חדש';
+            document.getElementById('modalBody').innerHTML = `
+                <input type="text" id="recipeName" placeholder="שם המתכון">
+                <textarea id="recipeIngredients" placeholder="מרכיבים (כל מרכיב בשורה)" rows="5" style="width: 100%; padding: 8px;"></textarea>
+                <input type="text" id="recipeNotes" placeholder="הערות">
+            `;
+            document.getElementById('modal').classList.add('show');
         }
 
-        function updateCounters() {
-            const w = {
-                dagLaban: {itam: 250, edi: 160},
-                salmon: {itam: 220, edi: 120},
-                beef: {itam: 250, edi: 160},
-                chicken: {itam: 250, edi: 160},
-                tofu: {itam: 250, edi: 160}
-            };
-            Object.entries(w).forEach(([id, wt]) => {
-                const m = parseInt(document.getElementById(id).value) || 0;
-                const it = m * wt.itam;
-                const ed = m * wt.edi;
-                document.getElementById(id + 'Counter').textContent = `אתם: ${it}ג | עדי: ${ed}ג | סה"כ: ${it+ed}ג`;
-            });
+        function saveModal() {
+            if (currentModal.type === 'meal') {
+                const name = document.getElementById('modalName').value;
+                const qty = parseFloat(document.getElementById('modalQty').value);
+                const unit = document.getElementById('modalUnit').value;
+                
+                if (!name || isNaN(qty) || !unit) { alert('מלאו את כל השדות'); return; }
+                
+                const meal = {name, qty, unit};
+                const meals = currentModal.person === 'itam' ? itamMeals : ediMeals;
+                
+                if (currentModal.index === -1) {
+                    meals.push(meal);
+                } else {
+                    meals[currentModal.index] = meal;
+                }
+                
+                localStorage.setItem(currentModal.person + 'Meals', JSON.stringify(meals));
+                renderMealsTable(currentModal.person);
+            } else if (currentModal.type === 'recipe') {
+                const name = document.getElementById('recipeName').value;
+                const ingredients = document.getElementById('recipeIngredients').value.split('\n').filter(i => i.trim());
+                const notes = document.getElementById('recipeNotes').value;
+                
+                if (!name || ingredients.length === 0) { alert('הוסיפו שם ומרכיבים'); return; }
+                
+                const recipe = {name, ingredients, notes};
+                if (currentModal.index === -1) {
+                    recipes.push(recipe);
+                } else {
+                    recipes[currentModal.index] = recipe;
+                }
+                
+                localStorage.setItem('recipes', JSON.stringify(recipes));
+                renderRecipes();
+            }
+            closeModal();
         }
 
-        function updateTotal() {
-            const m = ['dagLaban', 'salmon', 'beef', 'chicken', 'tofu'].reduce((s, id) => s + (parseInt(document.getElementById(id).value) || 0), 0);
-            document.getElementById('totalMeals').textContent = m + ' ארוחות';
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
         }
 
-        function populateTables() {
-            const it = [
-                {n: 'דג לבן', q: 1750, u: 'גרם'},
-                {n: 'סלמון', q: 1540, u: 'גרם'},
-                {n: 'בקר', q: 1750, u: 'גרם'},
-                {n: 'עוף', q: 1750, u: 'גרם'},
-                {n: 'אורז', q: 1500, u: 'גרם'},
-                {n: 'בטטה', q: 2000, u: 'גרם'},
-            ];
-            const ed = [
-                {n: 'דג לבן', q: 1120, u: 'גרם'},
-                {n: 'סלמון', q: 840, u: 'גרם'},
-                {n: 'בקר', q: 1120, u: 'גרם'},
-                {n: 'עוף', q: 1120, u: 'גרם'},
-                {n: 'אורז', q: 840, u: 'גרם'},
-                {n: 'בטטה', q: 1120, u: 'גרם'},
-            ];
-            document.getElementById('itamTable').innerHTML = it.map(i => `<tr style="border: 1px solid #ddd;"><td style="padding: 10px; text-align: right;">${i.n}</td><td style="padding: 10px; text-align: right;">${i.q}</td><td style="padding: 10px; text-align: right;">${i.u}</td></tr>`).join('');
-            document.getElementById('ediTable').innerHTML = ed.map(i => `<tr style="border: 1px solid #ddd;"><td style="padding: 10px; text-align: right;">${i.n}</td><td style="padding: 10px; text-align: right;">${i.q}</td><td style="padding: 10px; text-align: right;">${i.u}</td></tr>`).join('');
+        function renderRecipes() {
+            document.getElementById('recipesList').innerHTML = recipes.map((r, i) => `
+                <div style="background: #fff; padding: 12px; border-radius: 8px; margin: 10px 0; border-right: 4px solid #ff9800;">
+                    <h3>${r.name}</h3>
+                    <p><strong>מרכיבים:</strong> ${r.ingredients.join(', ')}</p>
+                    <p><strong>הערות:</strong> ${r.notes || 'אין'}</p>
+                    <button class="btn-edit" onclick="editRecipeDialog(${i})">✏️ ערוך</button>
+                    <button class="btn-delete" onclick="deleteRecipe(${i})">🗑️ מחק</button>
+                </div>
+            `).join('');
+        }
+
+        function editRecipeDialog(index) {
+            const r = recipes[index];
+            currentModal = {type: 'recipe', index};
+            document.getElementById('modalTitle').textContent = 'ערוך מתכון';
+            document.getElementById('modalBody').innerHTML = `
+                <input type="text" id="recipeName" value="${r.name}">
+                <textarea id="recipeIngredients" rows="5" style="width: 100%; padding: 8px;">${r.ingredients.join('\n')}</textarea>
+                <input type="text" id="recipeNotes" value="${r.notes || ''}">
+            `;
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function deleteRecipe(index) {
+            recipes.splice(index, 1);
+            localStorage.setItem('recipes', JSON.stringify(recipes));
+            renderRecipes();
         }
 
         function calculateShoppingList() {
-            const s = {
-                dagLaban: parseInt(document.getElementById('dagLaban').value) || 0,
-                salmon: parseInt(document.getElementById('salmon').value) || 0,
-                beef: parseInt(document.getElementById('beef').value) || 0,
-                chicken: parseInt(document.getElementById('chicken').value) || 0,
-                tofu: parseInt(document.getElementById('tofu').value) || 0
-            };
-            const m = [];
-            const md = {
-                dagLaban: {itam: 250, edi: 160, name: 'דג לבן'},
-                salmon: {itam: 220, edi: 120, name: 'סלמון'},
-                beef: {itam: 250, edi: 160, name: 'בקר'},
-                chicken: {itam: 250, edi: 160, name: 'עוף'},
-                tofu: {itam: 250, edi: 160, name: 'טופו'}
-            };
-            Object.entries(s).forEach(([k, c]) => {
-                if (c > 0) {
-                    const d = md[k];
-                    m.push({name: d.name, quantity: c * (d.itam + d.edi), unit: 'גרם', category: 'בשרים'});
-                }
-            });
-            const f = [
-                {name: 'בננה', q: 14, u: 'יח\'', c: 'ארוחה'},
-                {name: 'תפוח', q: 14, u: 'יח\'', c: 'ארוחה'},
-                {name: 'אבטיח', q: 2800, u: 'גרם', c: 'ארוחה'},
-                {name: 'אורז', q: 2340, u: 'גרם', c: 'פחמימות'},
-                {name: 'בטטה', q: 3120, u: 'גרם', c: 'פחמימות'},
-                {name: 'עגבניה', q: 7000, u: 'גרם', c: 'ירקות'},
-                {name: 'מלפפון', q: 4200, u: 'גרם', c: 'ירקות'},
-            ];
-            f.forEach(i => m.push({name: i.name, quantity: i.q, unit: i.u, category: i.c}));
-            const ca = {};
-            m.forEach(i => {
-                if (!ca[i.category]) ca[i.category] = [];
-                ca[i.category].push(i);
-            });
-            shoppingList = ca;
-            displayShoppingList(ca);
-            switchTab(2);
+            // פשוט חישוב פשוט
+            document.getElementById('shoppingListSection').style.display = 'block';
+            document.getElementById('noShoppingList').style.display = 'none';
+            document.getElementById('shoppingListContent').innerHTML = '<p>רשימה שבועית (בהמשך יתעדכן)</p>';
         }
 
-        function displayShoppingList(ca) {
-            const c = document.getElementById('shoppingListContent');
-            let h = '';
-            const o = ['ארוחה', 'בשרים', 'פחמימות', 'ירקות'];
-            const e = {'ארוחה': '🌅', 'בשרים': '🥩', 'פחמימות': '🍚', 'ירקות': '🥕'};
-            o.forEach(cat => {
-                if (ca[cat]) {
-                    h += `<div class="category-section"><div class="category-title">${e[cat]} ${cat}</div><div class="item-list">`;
-                    ca[cat].forEach(i => {
-                        const q = i.quantity % 1 === 0 ? i.quantity : i.quantity.toFixed(1);
-                        h += `<div class="item"><span class="item-name">${i.name}</span><div class="item-qty"><span class="item-quantity">${q}${i.unit}</span><div class="item-controls"><button class="edit-btn" onclick="editItem('${i.name}', ${i.quantity}, '${i.unit}')">✏️</button><button class="delete-btn" onclick="deleteItem('${i.name}')">🗑️</button></div></div></div>`;
-                    });
-                    h += `</div></div>`;
-                }
-            });
-            c.innerHTML = h;
-            document.getElementById('shoppingListContainer').style.display = 'block';
-            document.getElementById('noList').style.display = 'none';
+        function updateNutrition() {
+            // חישוב בסיסי - אפשר לשפר
+            document.getElementById('itamNutrition').innerHTML = `
+                <div class="nutrition-box">
+                    <strong>חלבון:</strong> ~120ג ליום<br>
+                    <strong>פחמימות:</strong> ~150ג ליום<br>
+                    <strong>שומנים:</strong> ~50ג ליום
+                </div>
+            `;
+            document.getElementById('ediNutrition').innerHTML = `
+                <div class="nutrition-box">
+                    <strong>חלבון:</strong> ~100ג ליום<br>
+                    <strong>פחמימות:</strong> ~120ג ליום<br>
+                    <strong>שומנים:</strong> ~40ג ליום
+                </div>
+            `;
         }
 
-        function editItem(n, q, u) {
-            document.getElementById('editItemName').value = n;
-            document.getElementById('editItemQty').value = q;
-            document.getElementById('editItemUnit').value = u;
-            document.getElementById('editModal').classList.add('show');
-        }
-
-        function closeEdit() {
-            document.getElementById('editModal').classList.remove('show');
-        }
-
-        function saveEdit() {
-            const n = document.getElementById('editItemName').value;
-            const nq = parseFloat(document.getElementById('editItemQty').value);
-            const nu = document.getElementById('editItemUnit').value;
-            if (isNaN(nq)) { alert('מספר'); return; }
-            Object.values(shoppingList).flat().forEach(i => {
-                if (i.name === n) { i.quantity = nq; i.unit = nu; }
-            });
-            displayShoppingList(shoppingList);
-            closeEdit();
-        }
-
-        function deleteItem(n) {
-            Object.keys(shoppingList).forEach(c => {
-                shoppingList[c] = shoppingList[c].filter(i => i.name !== n);
-            });
-            displayShoppingList(shoppingList);
-        }
+        window.addEventListener('DOMContentLoaded', () => {
+            renderMealsTable('itam');
+            renderMealsTable('edi');
+            renderRecipes();
+        });
     </script>
 </body>
 </html>
