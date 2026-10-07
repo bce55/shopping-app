@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VN Transcriber</string>
+    <string name="accessibility_label">VN Transcriber: show cards over WhatsApp</string>
+    <string name="accessibility_description">Lets VN Transcriber know when WhatsApp is on screen, so transcript cards only appear over WhatsApp. It does not read any screen content.</string>
+</resources>
